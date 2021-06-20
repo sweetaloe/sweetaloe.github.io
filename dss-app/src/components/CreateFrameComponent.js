@@ -1,42 +1,47 @@
 import React from 'react'
 import { Form, Col, Button, Container } from 'react-bootstrap'
+import SlotComponent from './SlotComponent'
+import _uniqueId from 'lodash/uniqueId';
 
 class CreateFrame extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = { slots: [<SlotComponent deleteAttribute={this.deleteAttribute} key={_uniqueId()}/>] }
+
+        this.addAttribute = this.addAttribute.bind(this);
+        this.deleteAttribute = this.deleteAttribute.bind(this);
+    }
+
+    addAttribute() {
+        var newSlot = <SlotComponent deleteAttribute={this.deleteAttribute} key={_uniqueId()}/>
+        this.setState(prevState => ({ slots: [...prevState.slots, newSlot] }))
+    }
+
+    deleteAttribute = (Key) => {
+        this.setState(prevState => ({ slots: prevState.slots.filter(slot => slot.key !== Key) }))
+    }
+
     render() {
+
         return <div>
             <div className="FrameForm" class="w-50">
-                <div class="col-auto mb-5 mt-5">
-                    <label for="frameName" class="visually-hidden">Название фрейма</label>
+                <div class="col-auto mb-2 mt-5">
+                    <label for="frameName" >Имя фрейма</label>
                     <input type="text" class="form-control" id="frameName" placeholder="Название фрейма" />
                 </div>
 
-                <Form className="p-2 mb-3 border">
-                    <Form.Row className="d-flex">
+                <Form className="p-2 border">
 
-                        <Form.Group as={Col} xs={3} controlId="formGridState">
-                            <Form.Label>State</Form.Label>
-                            <Form.Control as="select" defaultValue="Тип">
-                                <option>1</option>
-                                <option>2</option>
-                            </Form.Control>
-                        </Form.Group>
+                    {this.state.slots}
 
-                        <Form.Group as={Col} xs={8} controlId="">
-                            <Form.Label>Zip</Form.Label>
-                            <Form.Row className="d-flex">
-                                <Form.Control as={Col} xs={10}/>
-                                <Button variant="outline-danger">-</Button>
-                            </Form.Row>
-                        </Form.Group>
-
-
-                    </Form.Row>
+                    <div className="d-grid gap-2 mt-3">
+                        <Button variant="outline-primary" onClick={this.addAttribute}>
+                            Добавить свойство
+                        </Button>
+                    </div>
                 </Form>
-                <div className="d-grid gap-2">
-                    <Button variant="outline-primary">
-                        Block level button
-                    </Button>
-                </div>
+
 
             </div>
         </div>
